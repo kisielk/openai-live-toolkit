@@ -4,20 +4,21 @@ A GPT-Live voice assistant screen: start/stop, an optional speaker isolation tog
 
 ## Setup
 
-Needs Node 22+ and AWS credentials that can read `s3://switchboard-sdk` (see [Getting started](../docs/getting-started.md)). iOS needs Ruby 3.1+ with Bundler and Xcode; Android needs JDK 17 and the Android SDK with NDK 29.0.14206865.
+Needs Node 22+ and AWS credentials that can read `s3://switchboard-sdk` (see [Getting started](../docs/getting-started.md)). If they live in a named profile rather than the default one, set `AWS_PROFILE=<name>` for `pod install` and the first Android build. iOS needs Ruby 3.1+ with Bundler and Xcode; Android needs JDK 17 and the Android SDK with NDK 29.0.14206865.
 
 The app uses the shared Switchboard credentials and the WebRTC transport, so it needs no OpenAI key: the Switchboard backend creates the session. To use another app or backend, such as staging, set `SWITCHBOARD_APP_ID`, `SWITCHBOARD_APP_SECRET` and `SWITCHBOARD_API_URL` in `.env`, then restart Metro with `npm start -- --reset-cache` so it picks them up.
 
-The app uses the shared Switchboard credentials and the WebRTC transport, so it needs no OpenAI key: the Switchboard backend creates the session.
+Install the toolkit's own dependencies in the repo root first. Installing `example/` builds the toolkit with its `tsc`, and without them that build picks up whatever `tsc` is on your `PATH`, which can fail.
 
 ```sh
+(cd .. && npm install)
 cp .env.example .env
 npm install
 cd ios && bundle exec pod install && cd ..
 npm start
 ```
 
-Open `ios/OpenAILiveToolkitExample.xcworkspace`, pick your team under Signing & Capabilities, and run it.
+Open `ios/OpenAILiveToolkitExample.xcworkspace`, pick your team under Signing & Capabilities, and run it. For the simulator, choose a specific device such as iPhone 17 Pro, not Any iOS Simulator Device: `SwitchboardOpenAI` has no x86_64 simulator slice, so the generic destination fails with an rsync error.
 
 ### Android
 
